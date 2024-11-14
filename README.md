@@ -10,7 +10,7 @@ Below, you will find a collection of detailed Security use-cases categorized int
 ## How to Use This Repository
 
 Each use-case is documented with:
-- An high-level summary of what it aims at demonstrate and achieve
+- A high-level summary of what it aims at demonstrate and achieve
 - The benefits provided by the solution approach using Dynatrace
 - A step-by-step guidance on how to setup the environment and reproduce the use-case
 
