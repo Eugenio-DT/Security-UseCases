@@ -2,16 +2,31 @@
 
 <br>
 
-- [Introduction and Goals](#introduction-and-goals)
+- [Get started: spin-up the environment and resources](#get-started-spin-up-the-environment-and-resources)
 - [Use-case](#use-case)
-  - [Description](#description)
+  - [Introduction and Goals](#introduction-and-goals)
+  - [Scenario Description](#description)
   - [Environment Preparation](#environment-preparation)
   - [Attack Simulation](#attack-simulation)
   - [Security Investigation](#security-investigation)
 
 <br>
 
-## Introduction and Goals
+## Get started: spin-up the environment and resources
+The present use-case leverages on the [ACE-Box](https://github.com/Dynatrace/ace-box/tree/dev) framework to setup and configure the environment and all the needed resources to reproduce the intended scenario.
+
+In order to prepare the environment and resources to reproduce the use-case, it's needed to configure the ACE-Box to spin-up an external use-case by following the instructions available [here](https://github.com/Dynatrace/ace-box/blob/dev/Readme.md).<br>
+The *Account Enumeration Investigation* use-case is defined in the following [repository](https://github.com/dynatrace-ace/ace-box-ext-demo-security-forensics.git).
+
+*Notes*:
+  - If you can't access the [ACE-Box](https://github.com/Dynatrace/ace-box/tree/dev) repository, [here's]() how to request access
+  - If you can't access the [Use-case](https://github.com/dynatrace-ace/ace-box-ext-demo-security-forensics.git) repository, [here's]() how to request access
+
+<br>
+
+## Use-case
+
+### Introduction and Goals
 This use-case aims at simulating an account enumeration attack scenario agains the EasyTrade web application and then performing a forensic investigation on the application logs ingested by Dynatrace by means of the Security Investigator app.
 
 The main goals of the present hands-on exercise are:
@@ -21,18 +36,11 @@ The main goals of the present hands-on exercise are:
 
 <br>
 
-## Use-case
-
-### Description
+### Scenario Description
 A malicious actor has targeted a web application (EasyTrade) with the intention of identifying valid usernames using an _account enumeration_ technique, which is a type of security exploit where an attacker attempts to discover valid usernames on a web application or service by analyzing the responses to login attempts or other user-related requests.
 
 Imagine that the attacker has discovered that by making HTTP requests to a specific application endpoint, it is possible to infer the existence of user accounts based on the HTTP response status codes. When a valid username is provided in the request, the server responds with a `200 OK` HTTP status code, indicating that the account exists. When an invalid username is provided, the server responds with a `404 Not Found` HTTP status code.
 The malicious actor uses this application vulnerability to test a series of potential usernames, aiming to identify which ones are valid accounts on the application.
-
-<br>
-
-### Environment Preparation
-The present use-case leverages on the [ACE-Box framework](https://github.com/Dynatrace/ace-box/tree/dev) to setup and configure the environment and all the needed resources to reproduce the intended scenario. Please follow the instructions to spin up an external use-case pointing to the [ace-box-ext-demo-security-forensics](https://github.com/dynatrace-ace/ace-box-ext-demo-security-forensics.git) repository.
 
 <br>
 
