@@ -31,7 +31,7 @@ This page is intended for Security teams performing threat hunting or investigat
     - *Security Investigator App*: used within use-case
 
     #### Get Started
-    Check out the [Account Enumeration Investigation](./use-cases/Account%20Enumeration%20Investigation/account-enumeration-investigation.md) page for all the instruction to spin-up the use-case and demo it.
+    Check out the [Account Enumeration Investigation](./use-cases/Account%20Enumeration%20Investigation/Account%20Enumeration%20Investigation.md) page for all the instruction to spin-up the use-case and demo it.
 
 <br>
 
