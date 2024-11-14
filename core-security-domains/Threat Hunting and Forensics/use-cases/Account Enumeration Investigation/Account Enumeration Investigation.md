@@ -63,7 +63,7 @@ To simulate the account enumeration attack, there are two possibilities:
 
     Then, click the `Run` button on the top of the page and wait for the execution to be completed.
 
-2. Run the [account-enumeration-simulation.js](./templates/account-enumeration-simulation.js) file with a Javascript engine of your choice.
+2. Run the [account-enumeration-simulation.js](./additional-resources/account-enumeration-simulation.js) file with a Javascript engine of your choice.
     Please replace the `<your-domain>` placeholder with the EasyTrade domain that you can find in the ACE Dashboard.
 
 
