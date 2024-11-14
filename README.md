@@ -1,34 +1,26 @@
 # Security Use-Cases Repository
 
-Welcome to the Security Use-Cases repository for leveraging the Dynatrace platform. This repository aims to consolidate practical use-cases, best practices, and innovative approaches to drive platform adoption and maximize its value.
+Welcome to the Security Use-Cases repository for leveraging the Dynatrace platform.<br>
+This repository aims to collect, contextualize and provide all the resources to reproduce practical use-cases to drive Dynatrace Security platform adoption.
 
-Here, you will find a collection of detailed security use-cases categorized into distinct areas to help you better secure your systems, applications, and processes using Dynatrace.
-
-## Introduction
-
-In today's evolving threat landscape, organizations must ensure that their infrastructure, assets, and software remain secure and resilient against security threats while enabling rapid development and deployment. Dynatrace, with its comprehensive observability and security capabilities, empowers teams to proactively identify vulnerabilities, detect threats, and automate security validation throughout the lifecycle. This repository provides high-level descriptions and practical examples of how these capabilities can be used to enhance your security posture.
+Below, you will find a collection of detailed Security use-cases categorized into distinct areas to showcase how to leverage and use Dynatrace Security features to secure your systems, applications, and processes.
 
 <br>
 
 ## How to Use This Repository
 
-Each use-case is documented with a problem statement, the solution approach using Dynatrace, step-by-step guidance, and relevant code snippets or configurations.
+Each use-case is documented with:
+- An high-level summary of what it aims at demonstrate and achieve
+- The benefits provided by the solution approach using Dynatrace
+- A step-by-step guidance on how to setup the environment and reproduce the use-case
 
-Feel free to explore each section to learn how Dynatrace can be utilized to address specific security challenges and improve your organization's security practices.
-
-We encourage contributions to add new use-cases or refine existing ones to enhance collective learning and make security part of every step in the lifecycle.
-
-<br>
-
-## Getting Started
-
-To begin exploring these use-cases, navigate to the specific section that interests you the most or start with DevSecOps and Secure SDLC Management if you are new to integrating security with Dynatrace. Let's work together to make our systems more secure and resilient!
+Feel free to explore each section to learn how Dynatrace can be utilized to address specific security challenges and improve your organization's security posture.
 
 <br>
 
-## Use-Case Areas
+## Core Security Domains
 
-Below, you will find the core areas covered by this repository, each focusing on different aspects of security:
+Security use-cases are organized by core security domains, each focusing on different security areas and aspects:
 
 <br>
 
