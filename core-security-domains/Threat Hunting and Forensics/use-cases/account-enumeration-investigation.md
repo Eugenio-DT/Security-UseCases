@@ -2,21 +2,21 @@
 
 <br>
 
-- [Get started: spin-up the environment and resources](#get-started-spin-up-the-environment-and-resources)
+- [Get started: spin-up the use-case](#get-started-spin-up-the-use-case)
 - [Use-case](#use-case)
   - [Introduction and Goals](#introduction-and-goals)
   - [Scenario Description](#description)
-  - [Environment Preparation](#environment-preparation)
   - [Attack Simulation](#attack-simulation)
   - [Security Investigation](#security-investigation)
 
 <br>
 
-## Get started: spin-up the environment and resources
+## Get started: spin-up the use-case
 The present use-case leverages on the [ACE-Box](https://github.com/Dynatrace/ace-box/tree/dev) framework to setup and configure the environment and all the needed resources to reproduce the intended scenario.
 
-In order to prepare the environment and resources to reproduce the use-case, it's needed to configure the ACE-Box to spin-up an external use-case by following the instructions available [here](https://github.com/Dynatrace/ace-box/blob/dev/Readme.md).<br>
-The *Account Enumeration Investigation* use-case is defined in the following [repository](https://github.com/dynatrace-ace/ace-box-ext-demo-security-forensics.git).
+In order to prepare the environment and resources to reproduce the use-case, it's needed to configure the ACE-Box to spin-up an external use-case by following the instructions available [here](https://github.com/Dynatrace/ace-box/blob/dev/Readme.md).
+
+The *Account Enumeration Investigation* use-case to be configured as custom use-case is defined in the following [repository](https://github.com/dynatrace-ace/ace-box-ext-demo-security-forensics.git).
 
 *Notes*:
   - If you can't access the [ACE-Box](https://github.com/Dynatrace/ace-box/tree/dev) repository, [here's]() how to request access
