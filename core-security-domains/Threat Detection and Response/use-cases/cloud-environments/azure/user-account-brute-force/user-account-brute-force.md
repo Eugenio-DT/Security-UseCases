@@ -11,6 +11,7 @@
   - [Monitor User Sign-ins](#monitor-user-sign-ins)
   - [Detect the Attack](#detect-the-attack)
   - [Automate the Detection](#automate-the-detection)
+  - [Operationalize Security Events](#operationalize-security-events)
 - [Summary](#summary)
 
 <br>
@@ -65,7 +66,7 @@ Brute-force attacks are a common method used by attackers to exploit accounts wi
 <br>
 
 ### Attack Simulation
-To simulate the brute-force attack, there are two possibilities:
+To simulate a brute-force attack, there are two possibilities:
 
 1. Go to the Dynatrace environment, browse to the Dynatrace Workflow section and open the "_Brute-force Azure Sign-In Logs Upload_" workflow.
 
@@ -73,20 +74,24 @@ To simulate the brute-force attack, there are two possibilities:
 
     This is a simple workflow which is executing a javascript code to generate and upload a set of mocked Microsoft Entra ID sign-in logs simulating a brute-force attack towards a target user.
 
-    Then, click the `Run` button on the top of the page and wait for the execution to be completed.
+    Run the workflow and wait for the execution to be completed.
     
     <br>
 
-2. Send Microsoft Entra ID interactive sign-in logs to Dynatrace. Follow the instructions [here](https://docs.dynatrace.com/docs/analyze-explore-automate/logs/lma-log-ingestion/lma-log-ingestion-via-api/lma-cloud-provider-log-forwarding#microsoft-azure) to setup the log streaming.
+2. Send Microsoft Entra ID interactive sign-in logs to Dynatrace by following the instructions [here](https://docs.dynatrace.com/docs/analyze-explore-automate/logs/lma-log-ingestion/lma-log-ingestion-via-api/lma-cloud-provider-log-forwarding#microsoft-azure) to setup the log streaming.
     
     Run the [brute-force-simulator.ps1](./additional-resources/brute-force-simulator.ps1) to simulate the attack towards the connected Azure tenant with a test user of your choice.
     
-    Please replace all the `<placeholders>` within the script before running.
+    **Note**: replace all the `<placeholders>` within the script before running.
 
 <br>
 
 ### Monitor User Sign-ins
-Once we have uploaded the logs, let's take a look at them.
+> **Note**: the following sections assume you have simulated the brute-force attack with option n.1 (using the workflow)
+
+<br>
+
+Let's take a look at the logs.
 
 Head to the Dashboards App and open the _Azure Monitoring Dashboard_. Set the timeframe to the last hour and let's take a look at the logs.
 
@@ -148,16 +153,51 @@ This notebook aims at providing an overview of the malicious pattern to be detec
 
 <br>
 
-4. The fourth and final section is cross-referencing all the data and checks if the same user have performed any successful sign-in within the identified attackWindow or in the next 30-minutes. As said, user `riley.ward@example.com` is matching those conditions and the query output reports the two risky sign-in attempts:
+4. The fourth and final section is cross-referencing all the data:
+   - Identifies all the `5-minutes` time windows in which there are at least `15` failed sign-in
+   - Checks if the same user have performed any successful sign-in within the identified attackWindow or in the next 30-minutes
+   
+   User `riley.ward@example.com` is matching those conditions and the query output reports the two risky sign-in attempts:
 
     <img src="./images/notebook-results.png" width="800">
 
 <br>
 
 ### Automate the Detection
-...
+Let's take threat detection to the next level by automating the query leveraging on workflows.
+
+Browse to the Dynatrace Workflow section and open the "_Brute-force Detector_" workflow:
+
+<img src="./images/workflow-detector.png" width="500">
+
+This workflow is setup to automatically run every 30-minutes (e.g. taking the last 30 minutes data) the same brute-force detection logic of the notebook, extract the results, and create a custom security event for each detectde attack.
+
+Now, let's run the workflow and wait for its execution to be completed. Let's take a look a successful execution results:
+
+<img src="./images/workflow-execution-general.png" width="900">
+
+<br>
+
+By expanding the `records` section it is possible to get details on the detected attacks:
+
+<img src="./images/workflow-execution-detail.png" width="500">
+
+<br>
+
+**Notes**:
+- No event is pushed if the query returns `0` results
+- The custom security event is sent to a custom OpenPipeline event endpoint which is already provisioned and configured: `https://<dt-env-id>/platform/ingest/custom/events.security/threat.detection`
+
+<br>
+
+### Operationalize Security Events
+As next step, it is recommended to operationalize the generated threat detection events by:
+- Forwarding them to a SIEM/SOAR solution
+- Sending out a instant messaging notification (e.g: slack/teams message)
+- Create a ticket/incident on a IT Support Management tool (e.g: ServiceNow, Jira, ...)
 
 <br><br>
 
 ## Summary
-...
+The _brute-force_ is just one of the attack patterns that can be identified by inspecting cloud sign-in logs.<br>
+This use-case is leveraging on the full power of Dynatrace platform and creating a solution to automatically detect and raise security events to protect users, enabling faster incident response activities and smarter investingations.
