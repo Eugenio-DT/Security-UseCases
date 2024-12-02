@@ -32,7 +32,7 @@ The present use-case must be configured as an ACE-Box custom use-case, and it is
 ## Use-case
 
 ### Introduction and Goals
-This use-case aims at demonstrating how to use Dynatrace platform to detect brute-froce attacks towards user accounts by analyzing and querying [Microsoft Entra ID sign-in logs](https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins).
+This use-case aims at demonstrating how to use Dynatrace platform to detect brute-froce attack attempts towards user accounts by analyzing and querying [Microsoft Entra ID sign-in logs](https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins).
 
 The main **goals** of the present use-case are:
 1. Show how to setup and use Dyntrace to monitor sign-in user activities through Microsoft Entra ID sign-in logs
@@ -61,7 +61,7 @@ Brute-force attacks are a common method used by attackers to exploit accounts wi
 1. Identify, separately for each user, all the `5-minutes` time windows in which there are at least `15` failed sign-in with a specific error code
 2. Check if the same users have performed any successful sign-in within the identified attackWindow or in the next 30-minutes
 
-**Note**: the time window duration and the number of failed sign-ins are configured as thresholds and they can be changed and fine-tuned.
+> **Note**: the time window duration and the number of failed sign-ins are configured as thresholds and they can be changed and fine-tuned.
 
 <br>
 
@@ -146,23 +146,82 @@ This notebook aims at providing an overview of the malicious pattern to be detec
 
 <br>
 
-3. The third sections aims at fetchin all seccessful sign-ins performed by the target user within the last 30-minutes:
+3. The third sections aims at fetching all seccessful sign-ins performed by the target user within the last 30-minutes:
 
     <img src="./images/notebook-successful-signins.png" width="800">
 
     <br>
 
-    As reported by the above image, the same user has performed two successful sign-ins. In addition since they fall within the identified potential attack time windows, they can be considered as risky sign-ins, because they could represent the successful sign-ins performed by the attacker that have guessed the user credentials.
+    As reported by the above image, the same user has performed two successful sign-ins.<br>
+    In addition, since they fall within the identified potential attack time windows, they can be considered as risky sign-ins, because they could represent the successful sign-ins performed by the attacker that have guessed the user credentials.
 
 <br>
 
 4. The fourth and final section is cross-referencing all the data:
    - Identifies all the `5-minutes` time windows in which there are at least `15` failed sign-in
-   - Checks if the same user have performed any successful sign-in within the identified attackWindow or in the next 30-minutes
+   - Checks if the same user have performed any successful sign-in within the identified attack-window or in the next 30-minutes
    
    User `riley.ward@example.com` is matching those conditions and the query output reports the two risky sign-in attempts:
 
     <img src="./images/notebook-results.png" width="800">
+
+   <br>
+
+   Here there is the full DQL query to detect brute-force attempts:
+
+   ```
+    // Step-1: group records by user and timestamp
+    timeseries failedSignInsTimeSeries = count(log.azure.failed.user.signins), by:{userPrincipalName, AzureTimestamp, resultString}, interval: 1m
+    | summarize {
+        failedSignInCount = countIf(resultString == "50126")
+    },
+    by:{userPrincipalName, AzureTimestamp}
+    | fieldsRename AzureTimestamp, startTime
+
+    // Step-2: for each user, get all the failing sign-in timestamps in the whole time window and put them into an array
+    | join on:{userPrincipalName}, [
+    timeseries failedSignInsTimeSeries = count(log.azure.failed.user.signins), by:{userPrincipalName, AzureTimestamp, resultString}, interval: 1m
+    | filter resultString == "50126"
+    | summarize {
+        tsArray = collectArray(AzureTimestamp)
+        },
+    by:{userPrincipalName}
+    ]
+
+    // Step-3: expand the array and remove from it all the timestamps which are before the potentially malicious time window (timestamp --> timestamp + 5minutes)
+    | expand right.tsArray
+    | filter right.tsArray > startTime and right.tsArray <= (startTime + 5m)
+
+    // Step-4: count failed sign-in attempts for each user and malicious window startTime
+    | summarize countFailures = count(), by:{userPrincipalName, startTime}
+    | fieldsAdd endTime = startTime + 5m
+    | fieldsAdd attackWindow = timeframe(from:startTime, to:endTime)
+
+    // Step-5: keep windows with at least 15 failures for that user
+    | filter countFailures > 15
+
+    // Step-6: look for success sign-ins
+    | join on: {userPrincipalName}, [
+    timeseries failedSignInsTimeSeries = count(log.azure.success.user.signins), by:{ipAddress, userPrincipalName, AzureTimestamp}, interval: 1m
+    | summarize {
+        successfullSignIns = count(),
+        successSignInDetails = collectArray(record({user = userPrincipalName, timestamp = AzureTimestamp, ipAddress = ipAddress}))
+        },
+        by:{userPrincipalName}
+    | filter successfullSignIns > 0
+    ]
+    | expand right.successSignInDetails
+
+    // Step-7: keep successful sign-ins falling into the malicious time window and on the next 30-minutes 
+    | filter right.successSignInDetails[timestamp] >= startTime and right.successSignInDetails[timestamp] < (endTime + 30m)
+    | fieldsAdd detectionType = "User Account Brute-force"
+    | fields timestamp = right.successSignInDetails[timestamp], detectionType, ipAddress = right.successSignInDetails[ipAddress], victimUser = right.successSignInDetails[user], countFailures, attackWindow
+    | sort timestamp asc
+
+    // Step-8: remove duplicates
+    | dedup timestamp, ipAddress, victimUser
+   ```
+
 
 <br>
 
@@ -175,7 +234,7 @@ Browse to the Dynatrace Workflow section and open the "_Brute-force Detector_" w
 
 <br>
 
-This workflow is setup to automatically run every 30-minutes (e.g. taking the last 30 minutes data) the same brute-force detection logic of the notebook, extract the results, and create a custom security event for each detectde attack.
+This workflow is setup to automatically run every 30-minutes (e.g. taking the last 30 minutes data) the same brute-force detection logic described within the notebook, extract the results, and create a custom security event for each detectde attack.
 
 Now, let's run the workflow and wait for its execution to be completed. Let's take a look a successful execution results:
 
@@ -185,7 +244,7 @@ Now, let's run the workflow and wait for its execution to be completed. Let's ta
 
 By expanding the `records` section it is possible to get details on the detected attacks:
 
-<img src="./images/workflow-execution-detail.png" width="500">
+<img src="./images/workflow-execution-detail.png" width="400">
 
 <br>
 
