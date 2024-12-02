@@ -72,9 +72,10 @@ To simulate a brute-force attack, there are two possibilities:
 
     <img src="./images/workflow-logs-upload.png" width="500">
 
-    This is a simple workflow which is executing a javascript code to generate and upload a set of mocked Microsoft Entra ID sign-in logs simulating a brute-force attack towards a target user.
+    This is a simple workflow which is executing a javascript code to generate and upload a set of mocked Microsoft Entra ID sign-in logs simulating a brute-force attack towards a target user.<br>
+    Run the workflow and wait for the execution to be completed.<br>
 
-    Run the workflow and wait for the execution to be completed.
+    > **Note**: the workflow is accurately reproducing the [Microsoft ID sign-in log format](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/signinlogs).
     
     <br>
 
@@ -98,6 +99,8 @@ Head to the Dashboards App and open the _Azure Monitoring Dashboard_. Set the ti
 First of all, the dashboard offers a summary of the latest logs, counting the total amount, the failing and successful ones:
 
 <img src="./images/dashboard-summary.png" width="800">
+
+<br>
 
 In addition, by scrolling down you can get details on the location from where the sign-in activities were performed, the device OS and browser used and the accessed application.
 
@@ -169,6 +172,8 @@ Let's take threat detection to the next level by automating the query leveraging
 Browse to the Dynatrace Workflow section and open the "_Brute-force Detector_" workflow:
 
 <img src="./images/workflow-detector.png" width="500">
+
+<br>
 
 This workflow is setup to automatically run every 30-minutes (e.g. taking the last 30 minutes data) the same brute-force detection logic of the notebook, extract the results, and create a custom security event for each detectde attack.
 
