@@ -41,7 +41,7 @@ This page is intended for Security teams performing threat hunting or investigat
     - #### User Account Brute-force
 
         ##### Summary
-        This use-case demonstrates how to use Dynatrace platform to detect brute-froce attacks towards user accounts by analyzing and querying Microsoft Entra ID sign-in logs.
+        This use-case demonstrates how to use Dynatrace platform to detect brute-froce attack attempts towards user accounts by analyzing and querying Microsoft Entra ID sign-in logs.
         
         ##### Toolings and Dynatrace Apps
         - **ACE-Box framework**: used for the environment setup and preparation
@@ -49,4 +49,16 @@ This page is intended for Security teams performing threat hunting or investigat
 
         ##### Get Started
         Check out the [User Account Brute-force](./use-cases/cloud-environments/azure/user-account-brute-force/user-account-brute-force.md) page for all the instruction to spin-up the use-case and demo it.
+
+    - #### Password Spray
+
+        ##### Summary
+        This use-case demonstrates how to use Dynatrace platform to detect password spray attack attempts towards user accounts by analyzing and querying Microsoft Entra ID sign-in logs.
+        
+        ##### Toolings and Dynatrace Apps
+        - **ACE-Box framework**: used for the environment setup and preparation
+        - **Notebooks**, **Workflows**, **Dashboards**: used within use-case
+
+        ##### Get Started
+        Check out the [Password Spray](./use-cases/cloud-environments/azure/password-spray/password-spray.md) page for all the instruction to spin-up the use-case and demo it.
 
